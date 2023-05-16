@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" v-if="isQueryPermission">
     <!-- 搜索关键字的表单 -->
     <el-form :model="searchForm" ref="formRef" label-width="80px" size="large">
       <el-row :gutter="20">
@@ -20,8 +20,9 @@
                 v-model="searchForm.enable"
                 style="width: 100%"
               >
-                <el-option label="启用" value="1" />
-                <el-option label="禁用" value="2" />
+                <template v-for="iten in item.options" :key="iten.value">
+                  <el-option :label="iten.label" :value="iten.value" />
+                </template>
               </el-select>
 
               <!-- date-picker时间选择器类型 -->
@@ -46,21 +47,27 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
+import usePermission from '@/hooks/usePermission'
 import type { ElForm } from 'element-plus/lib/components/index.js'
-
-const formRef = ref<InstanceType<typeof ElForm>>()
 
 // 定义自定义事件/接受的属性
 interface IProps {
   searchConfig: {
+    pageName: string
     formList: any[]
   }
 }
 const emit = defineEmits(['queryClick', 'resetClcik'])
 const props = defineProps<IProps>()
+
+// 1、获取查询的权限
+const isQueryPermission = usePermission(`${props.searchConfig.pageName}:query`)
+
+const formRef = ref<InstanceType<typeof ElForm>>()
 
 // 定义表单的初始值
 const initialForm: any = {}

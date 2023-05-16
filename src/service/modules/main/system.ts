@@ -1,32 +1,32 @@
 import hyRequest from '../../'
 
-// 用户列表数据的网络请求
-export function postUserListData(queryInfo: any) {
+// 获取页面列表数据
+export function postPageEntireData(pageName: string, queryInfo: object) {
   return hyRequest.post({
-    url: '/users/list',
+    url: `/${pageName}/list`,
     data: queryInfo
   })
 }
 
-// 删除用户数据的网络请求
-export function deleteUserData(id: number) {
-  return hyRequest.delete({
-    url: `/users/${id}`
-  })
-}
-
-// 创建用户的网络请求
-export function createUserData(userInfo: any) {
+// 增加页面列表数据
+export function postPageAddData(pageName: string, queryInfo: object) {
   return hyRequest.post({
-    url: '/users',
-    data: userInfo
+    url: `/${pageName}`,
+    data: queryInfo
   })
 }
 
-// 修改用户的网络请求
-export function patchUserData(id: number, userInfo: any) {
+// 删除页面列表数据
+export function deletePageData(pageName: string, id: number) {
+  return hyRequest.delete({
+    url: `/${pageName}/${id}`
+  })
+}
+
+// 修改页面列表数据
+export function patchPageEditData(pageName: string, id: number, infoData: object) {
   return hyRequest.patch({
-    url: `/users/${id}`,
-    data: userInfo
+    url: `/${pageName}/${id}`,
+    data: infoData
   })
 }

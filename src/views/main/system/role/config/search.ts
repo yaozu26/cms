@@ -1,17 +1,17 @@
 const searchConfig = {
-  pageName: 'department',
+  pageName: 'role',
   formList: [
     {
       type: 'input',
-      label: '部门名称',
+      label: '角色名称',
       prop: 'name',
-      placeholder: '请输入查询的部门名称'
+      placeholder: '请输入查询的角色名称'
     },
     {
       type: 'input',
-      label: '部门领导',
-      prop: 'leader',
-      placeholder: '请输入查询的部门领导名称'
+      label: '权限介绍',
+      prop: 'intro',
+      placeholder: '请输入权限介绍'
     },
     {
       type: 'date-picker',

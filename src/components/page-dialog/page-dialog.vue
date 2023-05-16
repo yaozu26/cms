@@ -24,13 +24,15 @@
               :placeholder="item.placeholder"
               style="width: 100%"
             >
-              <el-option
-                v-for="iten in item.options"
-                :key="iten.id"
-                :label="iten.laebl"
-                :value="iten.label"
-              />
+              <template v-for="iten in item.options" :key="iten.id">
+                <el-option :label="iten.label" :value="iten.id" />
+              </template>
             </el-select>
+
+            <!-- 自定义插槽 -->
+            <template v-else-if="item.type === 'custom'">
+              <slot :name="item.slotName"></slot>
+            </template>
           </el-form-item>
         </template>
       </el-form>
@@ -46,7 +48,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import useMainStore from '@/store/main/main'
+import useSystemStore from '@/store/main/system'
 import type { ElForm } from 'element-plus/lib/components/index.js'
 import type { IDialogConfig } from './type'
 
@@ -54,11 +56,12 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const isShowDialog = ref(false)
 const isNew = ref(true)
 const editDataId = ref(0)
-const mainStore = useMainStore()
+const systemStore = useSystemStore()
 
 // 获取的属性
 interface IProps {
   dialogConfig: IDialogConfig
+  otherInfo?: any
 }
 const props = defineProps<IProps>()
 
@@ -85,11 +88,15 @@ const setDialogShow = (isNewBool: boolean, userInfo: any = {}) => {
 
 // 新建用户和编辑用户事件
 const handleConfirmBtnClick = () => {
+  let infoData = { ...formData }
+  if (props.otherInfo) {
+    infoData = { ...infoData, ...props.otherInfo }
+  }
+
   if (!isNew.value && editDataId) {
-    mainStore.pageEditDataAction(props.dialogConfig.pageName, editDataId.value, formData)
+    systemStore.pageEditDataAction(props.dialogConfig.pageName, editDataId.value, infoData)
   } else {
-    console.log(formData)
-    mainStore.pageAddDataAction(props.dialogConfig.pageName, formData)
+    systemStore.pageAddDataAction(props.dialogConfig.pageName, infoData)
   }
 
   // 清空表单数据

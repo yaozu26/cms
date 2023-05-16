@@ -21,41 +21,31 @@ import PageDialog from '@/components/page-dialog/page-dialog.vue'
 import searchConfig from './config/search'
 import contentConfig from './config/content'
 import dialogConfig from './config/dialog'
-import { ref, computed } from 'vue'
-import useMainStore from '@/store/main/main'
-
-const dialogRef = ref()
-const contentRef = ref()
+import { computed } from 'vue'
+import useSystemStore from '@/store/main/system'
+import usePageContent from '@/hooks/usePageContent'
+import usePageDialog from '@/hooks/usePageDialog'
 
 // 对dialogConfig配置的操作
 const dialogConfigRef = computed(() => {
-  const mainStore = useMainStore()
-  const departments: any[] = mainStore.pageEntireData.map((item) => {
+  const systemStore = useSystemStore()
+  const departments: any[] = systemStore.pageEntireData.map((item) => {
     return { label: item.name, id: item.id }
   })
   dialogConfig.formList.forEach((item) => {
     if (item.prop === 'parentId') {
+      item.options = []
       item.options?.push(...departments)
     }
   })
   return dialogConfig
 })
 
-// 对page-dialog组件的操作
-const handleNewClick = () => {
-  dialogRef.value.setDialogShow(true)
-}
-const handlePatcClick = (formInfo: any) => {
-  dialogRef.value.setDialogShow(false, formInfo)
-}
-
 // 对page-content组件的操作
-const handleQueryClick = (queryInfo: any) => {
-  contentRef.value.fetchPageListData(queryInfo)
-}
-const handleResetClick = () => {
-  contentRef.value.fetchPageListData()
-}
+const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
+
+// 对page-dialog组件的操作
+const { dialogRef, handleNewClick, handlePatcClick } = usePageDialog()
 </script>
 
 <style lang="less" scoped></style>

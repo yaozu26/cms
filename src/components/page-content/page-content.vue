@@ -3,13 +3,13 @@
     <!-- 头部区域 -->
     <div class="header">
       <h2 class="title">{{ contentConfig.header.title }}</h2>
-      <el-button type="primary" @click="handleNewBtnClick">{{
+      <el-button v-if="isNewPermission" type="primary" @click="handleNewBtnClick">{{
         contentConfig.header.btnTitle
       }}</el-button>
     </div>
 
     <!-- 表格区域 -->
-    <el-table :data="pageEntireData" style="width: 100%" border>
+    <el-table :data="pageEntireData" style="width: 100%" border row-key="id">
       <template v-for="item in contentConfig.tableList" :key="item.prop">
         <!-- 选择框 -->
         <el-table-column
@@ -77,6 +77,7 @@
         >
           <template #default="{ row }">
             <el-button
+              v-if="isUpdatePermission"
               size="small"
               text
               type="primary"
@@ -86,6 +87,7 @@
               编辑
             </el-button>
             <el-button
+              v-if="isDelPermission"
               size="small"
               text
               type="danger"
@@ -126,8 +128,8 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { formatUTC } from '@/utils/format'
-import useMainStore from '@/store/main/main'
-import contentConfig from '@/views/main/system/department/config/content'
+import useSystemStore from '@/store/main/system'
+import usePermission from '@/hooks/usePermission'
 
 // 定义自定义事件/获取的属性
 interface IProps {
@@ -143,10 +145,16 @@ interface IProps {
 const emit = defineEmits(['newClick', 'patchClick'])
 const props = defineProps<IProps>()
 
-// 发起action，请求pagelist数据
-const mainStore = useMainStore()
-mainStore.pageEntireDataAction(contentConfig.pageName, {})
-const { pageEntireData, pageTotalCount } = storeToRefs(mainStore)
+// 1、获取增删查改对应的权限
+const isNewPermission = usePermission(`${props.contentConfig.pageName}:create`)
+const isDelPermission = usePermission(`${props.contentConfig.pageName}:delete`)
+const isQueryPermission = usePermission(`${props.contentConfig.pageName}:query`)
+const isUpdatePermission = usePermission(`${props.contentConfig.pageName}:update`)
+
+// 2、发起action，请求pagelist数据
+const systemStore = useSystemStore()
+systemStore.pageEntireDataAction(props.contentConfig.pageName, {})
+const { pageEntireData, pageTotalCount } = storeToRefs(systemStore)
 
 // 创建数据(增)
 const handleNewBtnClick = () => {
@@ -155,7 +163,7 @@ const handleNewBtnClick = () => {
 
 // 删除数据(删)
 const handleDeleteBtnClick = (id: number) => {
-  mainStore.pageDeleteDataAction(props.contentConfig.pageName, id)
+  systemStore.pageDeleteDataAction(props.contentConfig.pageName, id)
 }
 
 // 修改数据(改)
@@ -170,9 +178,11 @@ fetchPageListData()
 
 // 发送网络请求(查)
 function fetchPageListData(queryInfo: any = {}) {
+  if (!isQueryPermission) return
+
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
-  mainStore.pageEntireDataAction(props.contentConfig.pageName, { offset, size, ...queryInfo })
+  systemStore.pageEntireDataAction(props.contentConfig.pageName, { offset, size, ...queryInfo })
 }
 
 // 暴露属性
