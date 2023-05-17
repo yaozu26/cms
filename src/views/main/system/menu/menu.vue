@@ -24,17 +24,11 @@ const dialogConfigRef = computed(() => {
   const parentList: any[] = systemStore.pageEntireData.map((item) => {
     return { label: item.name, id: item.id }
   })
-  const typeList: any[] = systemStore.pageEntireData.map((item) => {
-    return { label: item.name, id: item.type + 1 }
-  })
 
   dialogConfig.formList.forEach((item) => {
     if (item.prop === 'parentId') {
       item.options = []
       item.options.push(...parentList)
-    } else if (item.prop === 'type') {
-      item.options = []
-      item.options.push(...typeList)
     }
   })
   return dialogConfig

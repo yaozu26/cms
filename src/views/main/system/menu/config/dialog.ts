@@ -18,7 +18,16 @@ const dialogConfig: IDialogConfig = {
       label: '菜单级别',
       prop: 'type',
       placeholder: '请输入菜单级别',
-      options: []
+      options: [
+        {
+          label: 2,
+          id: 2
+        },
+        {
+          label: 3,
+          id: 3
+        }
+      ]
     },
     {
       type: 'input',

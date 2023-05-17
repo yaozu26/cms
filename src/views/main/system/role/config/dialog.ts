@@ -21,6 +21,7 @@ const dialogConfig: IDialogConfig = {
     },
     {
       type: 'custom',
+      prop: 'menuList',
       slotName: 'menulist'
     }
   ]

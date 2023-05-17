@@ -41,7 +41,10 @@ import { mapMenuToIds } from '@/utils/mapMenu'
 
 // 对组件的操作
 const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
-const { dialogRef, handleNewClick, handlePatcClick } = usePageDialog(handleEditCallback)
+const { dialogRef, handleNewClick, handlePatcClick } = usePageDialog(
+  handleNewCallback,
+  handleEditCallback
+)
 
 // menulist插槽的逻辑
 const systemStore = useSystemStore()
@@ -50,13 +53,18 @@ const { menuEntireDara } = storeToRefs(systemStore)
 const otherInfo = ref()
 
 // 选择权限的逻辑
-const handleCheckClick = (data: any, { checkedKeys, halfCheckedKeys }: any) => {
-  const menulist = { ...checkedKeys, ...halfCheckedKeys }
-  otherInfo.value = { menulist: menulist }
+const handleCheckClick = (data1: any, data2: any) => {
+  const menulist = [...data2.checkedKeys, ...data2.halfCheckedKeys]
+  otherInfo.value = menulist
 }
 
-// 自定义插槽编辑回显的逻辑
+// 自定义插槽新建/编辑回显的逻辑
 const treeRef = ref()
+function handleNewCallback() {
+  nextTick(() => {
+    treeRef.value?.setCheckedKeys([])
+  })
+}
 function handleEditCallback(formData: any) {
   nextTick(() => {
     const ids = mapMenuToIds(formData.menuList)

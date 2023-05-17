@@ -3,10 +3,11 @@ import type PageDialog from '@/components/page-dialog/page-dialog.vue'
 
 type EditFnType = (data: any) => void
 
-function usePageDialog(editCallback?: EditFnType) {
+function usePageDialog(newCallback?: EditFnType, editCallback?: EditFnType) {
   const dialogRef = ref<InstanceType<typeof PageDialog>>()
   function handleNewClick() {
     dialogRef.value?.setDialogShow(true)
+    if (newCallback) newCallback([])
   }
   function handlePatcClick(formInfo: any) {
     dialogRef.value?.setDialogShow(false, formInfo)

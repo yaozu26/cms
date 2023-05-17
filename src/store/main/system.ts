@@ -12,6 +12,7 @@ interface ISystem {
   departmentEntireData: any[]
   roleEntireData: any[]
   menuEntireDara: any[]
+  currentPage: number
 }
 const useSystemStore = defineStore('system', {
   state: (): ISystem => ({
@@ -19,7 +20,8 @@ const useSystemStore = defineStore('system', {
     pageTotalCount: 0,
     departmentEntireData: [],
     roleEntireData: [],
-    menuEntireDara: []
+    menuEntireDara: [],
+    currentPage: 1
   }),
   actions: {
     // 获取部门列表/角色列表数据

@@ -85,6 +85,7 @@ export function mapMenuToIds(menulist: any[]) {
     }
   }
   recurseGetIds(menulist)
+
   return ids
 }
 

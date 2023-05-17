@@ -154,7 +154,18 @@ const isUpdatePermission = usePermission(`${props.contentConfig.pageName}:update
 // 2、发起action，请求pagelist数据
 const systemStore = useSystemStore()
 systemStore.pageEntireDataAction(props.contentConfig.pageName, {})
-const { pageEntireData, pageTotalCount } = storeToRefs(systemStore)
+const { pageEntireData, pageTotalCount, currentPage } = storeToRefs(systemStore)
+systemStore.$onAction(({ name, after }) => {
+  after(() => {
+    if (
+      name === 'pageAddDataAction' ||
+      name === 'pageDeleteDataAction' ||
+      name === 'pageEditDataAction'
+    ) {
+      currentPage.value = 1
+    }
+  })
+})
 
 // 创建数据(增)
 const handleNewBtnClick = () => {
@@ -172,7 +183,6 @@ const handlePatchBtnClick = (formInfo: any) => {
 }
 
 // 页码相关逻辑
-const currentPage = ref(1)
 const pageSize = ref(10)
 fetchPageListData()
 

@@ -75,22 +75,23 @@ const formData = reactive(initialForm)
 // 显示对话框
 const setDialogShow = (isNewBool: boolean, userInfo: any = {}) => {
   isShowDialog.value = true
-  if (!isNewBool) {
-    isNew.value = isNewBool
-    for (const key in formData) {
+  isNew.value = isNewBool
+  editDataId.value = userInfo.id
+  for (const key in formData) {
+    if (isNewBool) {
+      formData[key] = ''
+    } else {
       formData[key] = userInfo[key]
     }
-    editDataId.value = userInfo.id
-  } else {
-    isNew.value = true
   }
 }
 
-// 新建用户和编辑用户事件
+// 新建/编辑事件
 const handleConfirmBtnClick = () => {
+  isShowDialog.value = false
   let infoData = { ...formData }
   if (props.otherInfo) {
-    infoData = { ...infoData, ...props.otherInfo }
+    infoData = { ...infoData, menuList: props.otherInfo }
   }
 
   if (!isNew.value && editDataId) {
@@ -98,15 +99,13 @@ const handleConfirmBtnClick = () => {
   } else {
     systemStore.pageAddDataAction(props.dialogConfig.pageName, infoData)
   }
-
-  // 清空表单数据
-  formRef.value?.resetFields()
-  isShowDialog.value = false
 }
 
-// 取消新建用户事件
+// 取消新建事件
 const handleCancelBtnClick = () => {
-  formRef.value.resetFields()
+  for (const key in formData) {
+    formData[key] = ''
+  }
   isShowDialog.value = false
 }
 
