@@ -1,23 +1,22 @@
 <template>
   <div class="dashboard">
+    <!-- 1、顶部数据统计 -->
     <el-row :gutter="10">
-      <template v-for="item in goodsAmountData">
-        <el-col :span="6">
-          <GoodsCard :itemData="item" />
+      <template v-for="item in goodsAmountData" :key="item.amount">
+        <el-col :md="12" :lg="6" :xl="6">
+          <CardItem :itemData="item" />
         </el-col>
       </template>
     </el-row>
-    <BaseEcharts />
   </div>
 </template>
 
-<script lang="ts" setup>
-import GoodsCard from './c-cpns/goods-card.vue'
-import BaseEcharts from './c-cpns/base-echarts.vue'
+<script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import CardItem from './c-cpns/card-item.vue'
 import useDashboardStore from '@/store/main/anlysis/dashboard'
 
 const dashboardStore = useDashboardStore()
-dashboardStore.goodsAmmountDataAction()
+dashboardStore.goodsAmountDataAction()
 const { goodsAmountData } = storeToRefs(dashboardStore)
 </script>

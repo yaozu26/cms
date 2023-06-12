@@ -73,7 +73,7 @@ export function mapPathToCrumbs(path: string, userMenus: any) {
 
 // 根据菜单映射id的列表
 export function mapMenuToIds(menulist: any[]) {
-  let ids: number[] = []
+  const ids: number[] = []
 
   function recurseGetIds(menu: any[]) {
     for (const item of menu) {
@@ -94,7 +94,7 @@ export function mapMenuToIds(menulist: any[]) {
  * @param
  */
 export function mapMenuToPerssions(menulist: any[]) {
-  let permissions: any[] = []
+  const permissions: any[] = []
 
   function recurseGetPerssions(menu: any[]) {
     for (const item of menu) {
