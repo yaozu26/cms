@@ -14,3 +14,21 @@ export function getGoodsCategoryCountData() {
     url: '/goods/category/count'
   })
 }
+
+export function getGoodsCategorySaleData() {
+  return hyRequest.get({
+    url: '/goods/category/sale'
+  })
+}
+
+export function getGoodsCategoryFavorData() {
+  return hyRequest.get({
+    url: '/goods/category/favor'
+  })
+}
+
+export function getGoodsAddressSaleData() {
+  return hyRequest.get({
+    url: '/goods/address/sale'
+  })
+}
